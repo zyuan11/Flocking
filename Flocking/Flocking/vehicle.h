@@ -1,22 +1,34 @@
 #pragma once
-#include "main.h"
+#include "PVector.h"
+#include "config.h"
 
 class Vehicle {
-	sf::Vector2f loc;	//location of vehicle
-	sf::Vector2f vel;	//velocity of vehicle
-	sf::Vector2f acc;	//velocity of acceleration
+	PVector loc;	//location of vehicle
+	PVector vel;	//velocity of vehicle
+	PVector acc;	//acceleration of vehicle
 
-	float MaxSpeed;
+	float r;		//for size
+	float maxForce;	//maximum force can be applied to vehicle
+	float maxSpeed;	//maximum speed vehicle can have
 
-	sf::Vector2f steer;	//steer force
-	sf::Vector2f vel_desired; 
+	PVector desired;
+	PVector steer;
 
-	Vehicle();
+public:
+	sf::ConvexShape shape;	//shape of vehicle
 
-	void normalize();
-	void setSteer();
-	void getDesired(sf::Vector2f target);
-	void seek(sf::Vector2f target);
-	void applyForce();
+	Vehicle() {}
+	Vehicle(float x, float y);
+	void update();
+	void shapeUpdate();
+	void applyForce(PVector force);
+	void seek(PVector target);
 
+	float getSize();
+	sf::Vector2f getLoc();
+
+
+	float heading();
+
+	void DisplayInfo();
 };

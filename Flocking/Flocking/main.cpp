@@ -1,9 +1,18 @@
-#include <SFML/Graphics.hpp>
+#include "main.h"
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Flocking");
+	//initialization
+	int flockInitSize = 1;
+
+	VehicleSystem myFlock = VehicleSystem();
+	myFlock.flockInit(flockInitSize);
+
+	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Flocking");
 	
+	PVector target = PVector(100.0f, 50.0f);
+	
+
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -14,7 +23,12 @@ int main()
 		}
 
 		window.clear();
-		//window.draw(shape);
+		
+		for (int i = 0; i < myFlock.getSize(); ++i) {
+			window.draw(myFlock.flock[i].shape);
+			myFlock.flock[i].seek(target);
+			myFlock.flock[i].update();
+		}
 		window.display();
 	}
 
