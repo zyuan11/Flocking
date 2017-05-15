@@ -14,21 +14,30 @@ class Vehicle {
 	PVector desired;
 	PVector steer;
 
+	//FOR SEPARATION
+	
+
 public:
 	sf::ConvexShape shape;	//shape of vehicle
 
-	Vehicle() {}
-	Vehicle(float x, float y);
+	float desiredSep;
+	float neighbordist;
+
+	Vehicle();
+	~Vehicle() {};
+	void VehicleInit(float x, float y);
 	void update();
 	void shapeUpdate();
 	void applyForce(PVector force);
 	void seek(PVector target);
+	float heading();
 
 	float getSize();
 	sf::Vector2f getLoc();
 
-
-	float heading();
-
+	void separate(vector<Vehicle> vehicles);
+	void align(vector<Vehicle> vehicles);
+	void coheret(vector<Vehicle> vehicles);
+	
 	void DisplayInfo();
 };
