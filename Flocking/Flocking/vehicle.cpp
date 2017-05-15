@@ -20,7 +20,7 @@ Vehicle::Vehicle()
 	steer.set(0.0f, 0.0f);
 
 	r = 10.0f;
-	maxSpeed = 4.0f;
+	maxSpeed = 0.1f;
 	maxForce = 0.5f;
 
 	desiredSep = 40.0f;
@@ -94,6 +94,7 @@ void Vehicle::DisplayInfo() {
 }
 
 void Vehicle::separate(vector<Vehicle> vehicles) {
+	maxSpeed = 10.0f;
 	PVector sum;
 	int count = 0;
 	for (Vehicle other : vehicles) {
@@ -104,7 +105,7 @@ void Vehicle::separate(vector<Vehicle> vehicles) {
 			diff.normalize();
 			diff.div(dist);
 			sum.add(diff);
-			++count;
+			count++;
 		}
 	}
 	
@@ -118,13 +119,14 @@ void Vehicle::separate(vector<Vehicle> vehicles) {
 	}
 }
 void Vehicle::align(vector<Vehicle> vehicles) {
+	maxSpeed = 10.0f;
 	PVector sum;
 	int count = 0;
 	for (Vehicle other : vehicles) {
 		float dist = loc.dist(loc, other.loc);
 		if (dist > 0 && dist < neighbordist) {
 			sum.add(other.vel);
-			++count;
+			count++;
 		}
 		sum.add(other.vel);
 	}
@@ -139,13 +141,15 @@ void Vehicle::align(vector<Vehicle> vehicles) {
 	}
 }
 void Vehicle::coheret(vector<Vehicle> vehicles) {
+	maxSpeed = 10.0f; 
 	PVector sum;
+	sum.set(0, 0);
 	int count = 0;
 	for (Vehicle other : vehicles) {
 		float dist = loc.dist(loc, other.loc);
 		if (dist > 0 && dist < neighbordist) {
 			sum.add(other.vel);
-			++count;
+			count++;
 		}
 		sum.add(other.vel);
 	}

@@ -3,7 +3,7 @@
 int main()
 {
 	//initialization
-	int flockInitSize = 100;
+	int flockInitSize = 50;
 
 	VehicleSystem myFlock = VehicleSystem();
 	myFlock.flockInit(flockInitSize);
@@ -21,7 +21,7 @@ int main()
 	Vehicle *newVehicle;
 
 	//behaviour
-	bool DoSeparate = true;	
+	bool DoSeparate = false;	
 	bool DoAlign = false;
 	bool DoCoheret = false;
 
