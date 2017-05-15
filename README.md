@@ -1,4 +1,5 @@
 # Flocking
+Click to set target;
 Up Arrow / Down Arrow to add / remove vehicle;
 All separation, alignment and coherent are default to be turned off.
 A / Shift + A to turn on / off separation;
