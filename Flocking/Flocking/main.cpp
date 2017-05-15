@@ -3,13 +3,18 @@
 int main()
 {
 	//initialization
-	int flockInitSize = 10;
+	int flockInitSize = 100;
 
 	VehicleSystem myFlock = VehicleSystem();
 	myFlock.flockInit(flockInitSize);
 
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Flocking");
 	sf::Vector2i cursor;
+	sf::CircleShape cursorShape(10);
+	cursorShape.setFillColor(sf::Color(255, 102, 84));
+	cursorShape.setOutlineColor(sf::Color::Black);
+	cursorShape.setPosition(0.0f, 0.0f);
+
 	
 	PVector target;
 	target.set(100.0f, 50.0f);
@@ -28,6 +33,12 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 
+			if (event.type == sf::Event::MouseButtonReleased) {
+				cursor = sf::Mouse::getPosition(window);
+				cursorShape.setPosition(sf::Vector2f(cursor.x, cursor.y));
+				target.set(cursor.x, cursor.y);
+			}
+
 			if (event.type == sf::Event::KeyReleased) {
 				if (event.key.code == sf::Keyboard::Up) {
 					newVehicle = new Vehicle;
@@ -42,6 +53,9 @@ int main()
 		}
 
 		window.clear();
+
+		//draw cursorshape
+		window.draw(cursorShape);
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) {
@@ -74,10 +88,6 @@ int main()
 			}
 		}
 
-		//target update by cursor position
-		cursor = sf::Mouse::getPosition(window);
-		target.set(cursor.x, cursor.y);
-		//create new vehicle if click
 		for (int i = 0; i < myFlock.getSize(); ++i) {
 			window.draw(myFlock.flock[i].shape);
 			if (DoSeparate)

@@ -20,10 +20,10 @@ Vehicle::Vehicle()
 	steer.set(0.0f, 0.0f);
 
 	r = 10.0f;
-	maxSpeed = 0.3f;
-	maxForce = 0.1f;
+	maxSpeed = 4.0f;
+	maxForce = 0.5f;
 
-	desiredSep = 20.0f;
+	desiredSep = 40.0f;
 	neighbordist = 50.0f;
 }
 
