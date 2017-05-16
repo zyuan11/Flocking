@@ -1,7 +1,10 @@
 # Flocking
 Click to set target;
 Up Arrow / Down Arrow to add / remove vehicle;
-All separation, alignment and coherent are default to be turned off.
-A / Shift + A to turn on / off separation;
-S / Shift + S to turn on / off alignment;
-D / Shift + D to turn on / off coherent;
+//Separation and alignment are default to be turned on. Coherent is default to be turned off.
+//Separation Adjustment
+Q to turn on; W to turn off; E to increase weight; R to decrease weight;
+//Alignment Adjustment
+A to turn on; S to turn off; D to increase weight; F to decrease weight;
+//Cohesion Adjustment
+Z to turn on; X to turn off; C to increase weight; V to decrease weight;
