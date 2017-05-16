@@ -20,10 +20,10 @@ Vehicle::Vehicle()
 	steer.set(0.0f, 0.0f);
 
 	r = 10.0f;
-	maxSpeed = 0.1f;
-	maxForce = 0.5f;
+	maxSpeed = 8.0f;
+	maxForce = 0.3f;
 
-	desiredSep = 40.0f;
+	desiredSep = 20.0f;
 	neighbordist = 50.0f;
 }
 
@@ -37,7 +37,6 @@ void Vehicle::update() {
 	vel.limit(maxSpeed);
 	loc.add(vel);
 	acc.mul(0);
-
 	shapeUpdate();
 }
 
@@ -64,15 +63,14 @@ void Vehicle::applyForce(PVector force) {
 	acc.add(force);
 }
 
-void Vehicle::seek(PVector target) {
+PVector Vehicle::seek(PVector target) {
 	desired.sub(target, loc);
 	desired.normalize();
 	desired.mul(maxSpeed);
 
 	steer.sub(desired, vel);
 	steer.limit(maxForce);
-	applyForce(steer);
-
+	return steer;
 }
 
 float Vehicle::getSize() {
@@ -93,8 +91,27 @@ void Vehicle::DisplayInfo() {
 	std::cout << "Velocity: " << vel.x << ", " << vel.y << endl;
 }
 
-void Vehicle::separate(vector<Vehicle> vehicles) {
-	maxSpeed = 10.0f;
+void Vehicle::DoFlock(vector<Vehicle> vehicles, float SepWeight, float AliWeight, float CohWeight, sf::Vector2i cursor) {
+	PVector sep = separate(vehicles);
+	PVector ali = align(vehicles);
+	PVector coh = coheret(vehicles);
+	PVector temp;
+	temp.set(cursor.x, cursor.y);
+	PVector s = seek(temp);
+
+	sep.mul(SepWeight);
+	ali.mul(AliWeight);
+	coh.mul(CohWeight);
+
+	applyForce(sep);
+	applyForce(ali);
+	if (CohWeight > 0)
+		applyForce(coh);
+	else 
+		applyForce(s);
+
+}
+PVector Vehicle::separate(vector<Vehicle> vehicles) {
 	PVector sum;
 	int count = 0;
 	for (Vehicle other : vehicles) {
@@ -115,11 +132,15 @@ void Vehicle::separate(vector<Vehicle> vehicles) {
 		sum.mul(maxSpeed);
 		steer.sub(sum, vel);
 		steer.limit(maxForce);
-		applyForce(steer);
+		return steer;
+	}
+	else {
+		PVector newPV;
+		newPV.set(0.0f, 0.0f);
+		return newPV;
 	}
 }
-void Vehicle::align(vector<Vehicle> vehicles) {
-	maxSpeed = 10.0f;
+PVector Vehicle::align(vector<Vehicle> vehicles) {
 	PVector sum;
 	int count = 0;
 	for (Vehicle other : vehicles) {
@@ -137,11 +158,15 @@ void Vehicle::align(vector<Vehicle> vehicles) {
 		sum.mul(maxSpeed);
 		steer.sub(sum, vel);
 		steer.limit(maxForce);
-		applyForce(steer);
+		return steer;
+	}
+	else {
+		PVector newPV;
+		newPV.set(0.0f, 0.0f);
+		return newPV;
 	}
 }
-void Vehicle::coheret(vector<Vehicle> vehicles) {
-	maxSpeed = 10.0f; 
+PVector Vehicle::coheret(vector<Vehicle> vehicles) {
 	PVector sum;
 	sum.set(0, 0);
 	int count = 0;
@@ -156,7 +181,11 @@ void Vehicle::coheret(vector<Vehicle> vehicles) {
 
 	if (count > 0) {
 		sum.div(count);
-		seek(sum);
+		return seek(sum);
+	}
+	else {
+		PVector newPV;
+		newPV.set(0.0f, 0.0f);
+		return newPV;
 	}
 }
-

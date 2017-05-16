@@ -3,7 +3,7 @@
 int main()
 {
 	//initialization
-	int flockInitSize = 50;
+	int flockInitSize = 25;
 
 	VehicleSystem myFlock = VehicleSystem();
 	myFlock.flockInit(flockInitSize);
@@ -21,10 +21,7 @@ int main()
 	Vehicle *newVehicle;
 
 	//behaviour
-	bool DoSeparate = false;	
-	bool DoAlign = false;
-	bool DoCoheret = false;
-
+	
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -40,6 +37,7 @@ int main()
 			}
 
 			if (event.type == sf::Event::KeyReleased) {
+				//add / remove vehicle from vehicle system by pressing up / down arrow key
 				if (event.key.code == sf::Keyboard::Up) {
 					newVehicle = new Vehicle;
 					newVehicle->VehicleInit(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
@@ -48,7 +46,7 @@ int main()
 				else if (myFlock.getSize() > 0 && event.key.code == sf::Keyboard::Down) {
 					myFlock.removeVehicle();
 				}
-				
+
 			}
 		}
 
@@ -57,48 +55,40 @@ int main()
 		//draw cursorshape
 		window.draw(cursorShape);
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) {
-				cout << "Turn Off Separation" << endl;
-				DoSeparate = false;
-			}
-			else {
-				cout << "Turn On Separation" << endl;
-				DoSeparate = true;
-			}
-		}
-		if (event.key.code == sf::Keyboard::S) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) {
-				cout << "Turn Off Alignment" << endl;
-				 DoAlign = false;
-			}
-			else {
-				cout << "Turn On Alignment" << endl;
-				DoAlign = true;
-			}
-		}
-		if (event.key.code == sf::Keyboard::D) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) {
-				cout << "Turn Off Coherent" << endl;
-				DoCoheret = false;
-			}
-			else {
-				cout << "Turn On Coherent" << endl;
-				DoCoheret = true;
-			}
-		}
+		//sepration weight adjustment
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+			myFlock.TurnOnSep();
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+			myFlock.TurnOffSep();
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+			myFlock.IncreaseSep();
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+			myFlock.DecreaseSep();
 
+		//alighment weight adjustment
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+			myFlock.TurnOnAli();
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+			myFlock.TurnOffAli();
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+			myFlock.IncreaseAli();
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+			myFlock.DecreaseAli();
+
+		//coherent weight adjustment
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+			myFlock.TurnOnCoh();
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+			myFlock.TurnOffCoh();
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
+			myFlock.IncreaseCoh();
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::V))
+			myFlock.DecreaseCoh();
+
+		//draw & update each vehicle in vehicle system
 		for (int i = 0; i < myFlock.getSize(); ++i) {
 			window.draw(myFlock.flock[i].shape);
-			if (DoSeparate)
-				myFlock.flock[i].separate(myFlock.flock);
-			if (DoAlign)
-				myFlock.flock[i].align(myFlock.flock);
-			if (DoCoheret)
-				myFlock.flock[i].coheret(myFlock.flock);
-			else
-				myFlock.flock[i].seek(target);
-			
+			myFlock.flock[i].DoFlock(myFlock.flock, myFlock.SepWeight, myFlock.AliWeight, myFlock.CohWeight, cursor);
 			myFlock.flock[i].update();			
 		}
 		window.display();
