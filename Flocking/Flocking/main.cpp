@@ -75,7 +75,7 @@ int main()
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
 			myFlock.DecreaseAli();
 
-		//coherent weight adjustment
+		//Cohesion weight adjustment
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
 			myFlock.TurnOnCoh();
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
